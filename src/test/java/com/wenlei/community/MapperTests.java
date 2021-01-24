@@ -1,17 +1,20 @@
 package com.wenlei.community;
 
 import com.wenlei.community.dao.DiscussPostMapper;
+import com.wenlei.community.dao.LoginTicketMapper;
 import com.wenlei.community.dao.UserMapper;
 import com.wenlei.community.entity.DiscussPost;
+import com.wenlei.community.entity.LoginTicket;
 import com.wenlei.community.entity.User;
-import org.junit.*;
+
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.xml.bind.SchemaOutputResolver;
+
 import java.util.Date;
 import java.util.List;
 
@@ -19,13 +22,16 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = CommunityApplication.class)
-class MapperTests {
+public class MapperTests {
 
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
     private DiscussPostMapper discussPostMapper;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     @Test
     public void testSelectUser() {
@@ -74,6 +80,32 @@ class MapperTests {
 
         int rows = discussPostMapper.selectDiscussPostRows(149);
         System.out.println(rows);
+    }
+
+    @Test
+    public void testInsertLoginTicket() {
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(101);
+        loginTicket.setTicket("aba");
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + 1000 * 60 * 10));
+
+        loginTicketMapper.insertLoginTicket(loginTicket);
+
+    }
+
+    @Test
+    public void testSelectLoginTicket() {
+        LoginTicket loginTicket = loginTicketMapper.selectByTicket("aba");
+
+        System.out.println(loginTicket);
+
+        loginTicketMapper.updateStatus("aba", 1);
+
+        loginTicket = loginTicketMapper.selectByTicket("aba");
+
+        System.out.println(loginTicket);
+
     }
 
 }
