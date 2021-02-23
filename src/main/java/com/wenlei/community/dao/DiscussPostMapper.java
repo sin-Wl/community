@@ -20,10 +20,9 @@ public interface DiscussPostMapper {
 
     int insertDiscussPost(DiscussPost discussPost);
 
-  /*  List<ReplyPostResult> selectReplyDiscussPosts(int userId, int offset, int limit);
-
-
     DiscussPost selectDiscussPostById(int id);
+
+  /*  List<ReplyPostResult> selectReplyDiscussPosts(int userId, int offset, int limit);
 
     int updateCommentCount(int id, int commentCount);
 
