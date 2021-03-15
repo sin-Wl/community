@@ -45,4 +45,7 @@
         where id = #{id}
     </select>
 
+    <update id="updateCommentCount">        <!--参数为普通数据类型，故不需要parameterType特意声明，返回值类型同理-->
+        update discuss_post set comment_count = #{commentCount} where id = #{id}
+    </update>
 </mapper>
