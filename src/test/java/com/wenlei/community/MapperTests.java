@@ -2,9 +2,11 @@ package com.wenlei.community;
 
 import com.wenlei.community.dao.DiscussPostMapper;
 import com.wenlei.community.dao.LoginTicketMapper;
+import com.wenlei.community.dao.MessageMapper;
 import com.wenlei.community.dao.UserMapper;
 import com.wenlei.community.entity.DiscussPost;
 import com.wenlei.community.entity.LoginTicket;
+import com.wenlei.community.entity.Message;
 import com.wenlei.community.entity.User;
 
 import org.junit.Test;
@@ -29,6 +31,9 @@ public class MapperTests {
 
     @Autowired
     private DiscussPostMapper discussPostMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Autowired
     private LoginTicketMapper loginTicketMapper;
@@ -106,6 +111,31 @@ public class MapperTests {
 
         System.out.println(loginTicket);
 
+    }
+
+    @Test
+    public void testSelectLetters() {
+        List<Message> list = messageMapper.selectConversations(111, 0, 20);
+        for (Message message : list) {
+            System.out.println(message);
+        }
+
+        int rows = messageMapper.selectConversationCount(111);
+        System.out.println(rows);
+
+        list = messageMapper.selectLetters("111_112", 0, 10);
+        for (Message message : list) {
+            System.out.println(message);
+        }
+
+        rows = messageMapper.selectLetterCount("111_112");
+        System.out.println(rows);
+
+        rows = messageMapper.selectLetterUnreadCount(111, null);
+        System.out.println(rows);
+
+        rows = messageMapper.selectLetterUnreadCount(131, "111_131");
+        System.out.println(rows);
     }
 
 }
