@@ -2,6 +2,7 @@ package com.wenlei.community.controller;
 
 import com.wenlei.community.annotation.LoginRequired;
 import com.wenlei.community.entity.User;
+import com.wenlei.community.service.LikeService;
 import com.wenlei.community.service.UserService;
 import com.wenlei.community.util.CommunityUtil;
 import com.wenlei.community.util.HostHolder;
@@ -48,6 +49,9 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @RequestMapping(value = "/setting", method = RequestMethod.GET)
@@ -132,4 +136,21 @@ public class UserController {
             return "/site/setting";
         }
     }
+
+    // 个人主页
+    @RequestMapping(value = "/profile/{userId}", method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId") int userId, Model model) {
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("该用户不存在!");
+        }
+        // 用户
+        model.addAttribute("user", user);
+        // 点赞数量
+        int likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+
+        return "/site/profile";
+    }
+
 }
