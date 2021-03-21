@@ -1,6 +1,7 @@
 package com.wenlei.community.controller;
 
 
+import com.wenlei.community.annotation.LoginRequired;
 import com.wenlei.community.entity.Page;
 import com.wenlei.community.entity.User;
 import com.wenlei.community.service.FollowService;
@@ -31,6 +32,7 @@ public class FollowController implements CommunityConstant {
     @Autowired
     private UserService userService;
 
+    @LoginRequired
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
@@ -41,6 +43,7 @@ public class FollowController implements CommunityConstant {
         return CommunityUtil.getJSONString(0, "已关注!");
     }
 
+    @LoginRequired
     @RequestMapping(path = "/unfollow", method = RequestMethod.POST)
     @ResponseBody
     public String unfollow(int entityType, int entityId) {

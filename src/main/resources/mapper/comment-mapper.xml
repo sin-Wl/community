@@ -36,4 +36,13 @@
         values (#{userId},#{entityType},#{entityId},#{targetId},#{content},#{status},#{createTime})
     </insert>
 
+
+    <select id="selectPostCommentCountByUserId" resultType="int">
+        select count(distinct entity_id)
+        from comment
+        where status = 0
+          and user_id=#{userId}
+          and entity_type=#{entityType}
+    </select>
+
 </mapper>

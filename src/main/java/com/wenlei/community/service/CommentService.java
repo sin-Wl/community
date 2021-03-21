@@ -29,6 +29,10 @@ public class CommentService implements CommunityConstant {
         return commentMapper.selectCommentsByEntity(entityType, entityId, offset, limit);
     }
 
+    public int findPostCommentCountByUserId(int userId, int entityType) {
+        return commentMapper.selectPostCommentCountByUserId(userId, entityType);
+    }
+
     public int findCommentCount(int entityType, int entityId) {
         return commentMapper.selectCommentByEntity(entityType, entityId);
     }

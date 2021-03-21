@@ -2,6 +2,7 @@ package com.wenlei.community.service;
 
 import com.wenlei.community.dao.DiscussPostMapper;
 import com.wenlei.community.entity.DiscussPost;
+import com.wenlei.community.entity.ReplyPostResult;
 import com.wenlei.community.util.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class DiscussPostService {
 
     public List<DiscussPost> findDiscussPosts(int userId, int offset, int limit) {
         return discussPostMapper.selectDiscussPosts(userId, offset, limit);
+    }
+
+    public List<ReplyPostResult> findReplyDiscussPosts(int userId, int offset, int limit) {
+        return discussPostMapper.selectReplyDiscussPosts(userId,offset,limit);
     }
 
     public int findDiscussPostRows(int userId) {

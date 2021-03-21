@@ -48,4 +48,32 @@
     <update id="updateCommentCount">        <!--参数为普通数据类型，故不需要parameterType特意声明，返回值类型同理-->
         update discuss_post set comment_count = #{commentCount} where id = #{id}
     </update>
+
+    <select id="selectReplyDiscussPosts" resultType="ReplyPostResult">
+        select q.post_id,p.title as post_title,q.content as reply_content,q.create_time as reply_create_time
+        from discuss_post as p
+                 join
+             (
+                 select c.entity_id as post_id,c.content,c.create_time
+                 from comment c
+                          join
+                      (
+                          select entity_id,max(create_time) as max_create_time
+                          from comment
+                          where status = 0
+                            and user_id = #{userId}
+                            and entity_type = 1
+                          group by entity_id
+                          order by max_create_time desc
+                          limit #{offset},#{limit}
+                      ) as t
+                      on c.entity_id = t.entity_id and c.create_time = t.max_create_time
+                 where status = 0
+                   and user_id = #{userId}
+                   and entity_type = 1
+             ) as q
+             on q.post_id = p.id
+        where p.status!=2
+    </select>
+
 </mapper>

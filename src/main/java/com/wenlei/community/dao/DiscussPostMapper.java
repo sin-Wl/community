@@ -3,7 +3,7 @@ package com.wenlei.community.dao;
 import com.wenlei.community.entity.DiscussPost;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
+import com.wenlei.community.entity.ReplyPostResult;
 import java.util.List;
 
 @Mapper
@@ -24,7 +24,9 @@ public interface DiscussPostMapper {
 
     int updateCommentCount(int id, int commentCount);
 
-  /*  List<ReplyPostResult> selectReplyDiscussPosts(int userId, int offset, int limit);
+    List<ReplyPostResult> selectReplyDiscussPosts(int userId, int offset, int limit);
+
+  /*
 
     int updateType(int id, int type);
 
