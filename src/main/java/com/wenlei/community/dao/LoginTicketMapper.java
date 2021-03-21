@@ -4,6 +4,7 @@ import com.wenlei.community.entity.LoginTicket;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
+@Deprecated //废弃注解
 public interface LoginTicketMapper {
 
     @Insert({
