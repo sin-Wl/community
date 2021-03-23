@@ -28,7 +28,6 @@ public interface MessageMapper {
 
     // 更新消息状态
     int updateStatus(List<Integer> ids, int status);
-/*
 
     // 查询某个主题下最新的通知
     Message selectLatestNotice(int userId, String topic);
@@ -41,6 +40,5 @@ public interface MessageMapper {
 
     // 查询某个主题所包含的通知列表
     List<Message> selectNotices(int userId, String topic, int offset, int limit);
-*/
 
 }
