@@ -16,9 +16,8 @@ public interface CommentMapper {
 
     int selectPostCommentCountByUserId(int userId, int entityType);
 
-/*
-
     Comment selectCommentById(int id);
+/*
 
     // 更新指定评论的状态
     int updateStatus(int id, int status);

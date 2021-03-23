@@ -2,6 +2,8 @@ package com.wenlei.community.controller;
 
 import com.wenlei.community.entity.Comment;
 import com.wenlei.community.entity.DiscussPost;
+import com.wenlei.community.entity.Event;
+import com.wenlei.community.event.EventProducer;
 import com.wenlei.community.service.CommentService;
 import com.wenlei.community.service.DiscussPostService;
 import com.wenlei.community.util.CommunityConstant;
@@ -26,6 +28,9 @@ public class CommentController implements CommunityConstant {
     private HostHolder hostHolder;
 
     @Autowired
+    private EventProducer eventProducer;
+
+    @Autowired
     private DiscussPostService discussPostService;
 
     @RequestMapping(value = "/add/{discussPostId}", method = RequestMethod.POST)
@@ -35,6 +40,22 @@ public class CommentController implements CommunityConstant {
         comment.setStatus(0);
         comment.setCreateTime(new Date());
         commentService.addComment(comment);
+
+        // 触发评论事件
+        Event event = new Event()
+                .setTopic(TOPIC_COMMENT)
+                .setUserId(hostHolder.getUser().getId())
+                .setEntityType(comment.getEntityType())
+                .setEntityId(comment.getEntityId())
+                .setData("postId", discussPostId);
+        if (comment.getEntityType() == ENTITY_TYPE_POST) {
+            DiscussPost target = discussPostService.findDiscussPostById(comment.getEntityId());
+            event.setEntityUserId(target.getUserId());
+        } else if (comment.getEntityType() == ENTITY_TYPE_COMMENT) {
+            Comment target = commentService.findCommentById(comment.getEntityId());
+            event.setEntityUserId(target.getUserId());
+        }
+        eventProducer.fireEvent(event);
 
         return "redirect:/discuss/detail/" + discussPostId;  //redirect重定向实现方法中的跳转
     }
