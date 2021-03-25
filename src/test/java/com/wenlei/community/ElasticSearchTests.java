@@ -123,8 +123,12 @@ public class ElasticSearchTests {
               // 高亮的内容
              Map<String, List<String>> highLightFields = searchHit.getHighlightFields();
              // 将高亮的内容填充到content中
-             searchHit.getContent().setTitle(highLightFields.get("title") == null ? searchHit.getContent().getTitle() : highLightFields.get("title").get(0));
-             searchHit.getContent().setTitle(highLightFields.get("content") == null ? searchHit.getContent().getContent() : highLightFields.get("content").get(0));
+             searchHit.getContent().setTitle(
+                     highLightFields.get("title") == null ? searchHit.getContent().getTitle() : highLightFields.get("title").get(0)
+             );
+             searchHit.getContent().setTitle(
+                     highLightFields.get("content") == null ? searchHit.getContent().getContent() : highLightFields.get("content").get(0))
+             ;
              // 放到实体类中
              discussPosts.add(searchHit.getContent());
           }

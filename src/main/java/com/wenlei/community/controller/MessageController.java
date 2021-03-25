@@ -219,7 +219,6 @@ public class MessageController implements CommunityConstant {
         if (message != null) {
             Map<String, Object> messageVO = new HashMap<>();
             messageVO.put("message", message);
-
             String content = HtmlUtils.htmlUnescape(message.getContent());
             Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
 

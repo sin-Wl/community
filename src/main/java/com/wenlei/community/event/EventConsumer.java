@@ -1,11 +1,13 @@
 package com.wenlei.community.event;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wenlei.community.entity.DiscussPost;
 import com.wenlei.community.entity.Event;
 import com.wenlei.community.entity.Message;
+import com.wenlei.community.service.DiscussPostService;
 import com.wenlei.community.service.MessageService;
+import com.wenlei.community.service.ElasticsearchService;
 import com.wenlei.community.util.CommunityConstant;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,12 @@ public class EventConsumer implements CommunityConstant {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private DiscussPostService discussPostService;
+
+    @Autowired
+    private ElasticsearchService elasticsearchService;
 
     @KafkaListener(topics = {TOPIC_COMMENT, TOPIC_LIKE, TOPIC_FOLLOW})
     public void handleCommentMessage(ConsumerRecord record) {
@@ -57,5 +65,22 @@ public class EventConsumer implements CommunityConstant {
         }
         message.setContent(JSONObject.toJSONString(content));
         messageService.addMessage(message);
+    }
+
+    // 消费发帖事件
+    @KafkaListener(topics = {TOPIC_PUBLISH})
+    public void handlePublishMessage(ConsumerRecord record){
+        if(record == null || record.value() == null){
+            logger.error("消息内容为空！");
+            return;
+        }
+
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if(event == null){
+            logger.error("消息格式错误！");
+            return;
+        }
+        DiscussPost post = discussPostService.findDiscussPostById(event.getEntityId());
+        elasticsearchService.saveDiscussPost(post);
     }
 }
