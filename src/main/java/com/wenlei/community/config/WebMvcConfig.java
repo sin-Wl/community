@@ -1,5 +1,6 @@
 package com.wenlei.community.config;
 
+import com.wenlei.community.interceptor.DataInterceptor;
 import com.wenlei.community.interceptor.LoginRequiredInterceptor;
 import com.wenlei.community.interceptor.LoginTicketInterceptor;
 import com.wenlei.community.interceptor.MessageInterceptor;
@@ -23,6 +24,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private MessageInterceptor messageInterceptor;
 
+    @Autowired
+    private DataInterceptor dataInterceptor;
+
     // /**/.css，表示所有目录下的所有css文件
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -35,6 +39,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 */
 
         registry.addInterceptor(messageInterceptor)
+                .excludePathPatterns("/static/css/*.css", "/static/js/*.js", "/static/img/*.png", "/static/img/*.jpg", "/static/img/*.jpeg");
+
+        registry.addInterceptor(dataInterceptor)
                 .excludePathPatterns("/static/css/*.css", "/static/js/*.js", "/static/img/*.png", "/static/img/*.jpg", "/static/img/*.jpeg");
 
     }
