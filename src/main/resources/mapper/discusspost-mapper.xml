@@ -76,4 +76,12 @@
         where p.status!=2
     </select>
 
+    <update id="updateType">
+        update discuss_post set type = #{type} where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update discuss_post set status = #{status} where id = #{id}
+    </update>
+
 </mapper>

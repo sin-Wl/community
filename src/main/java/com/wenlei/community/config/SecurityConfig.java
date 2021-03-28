@@ -47,6 +47,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                         AUTHORITY_ADMIN,
                         AUTHORITY_MODERATOR
                 )
+                .antMatchers(
+                        "/discuss/top",
+                        "/discuss/wonderful"
+                )
+                .hasAnyAuthority(
+                        AUTHORITY_MODERATOR
+                )
+                .antMatchers(
+                        "/discuss/delete"
+                )
+                .hasAnyAuthority(
+                        AUTHORITY_ADMIN
+                )
+                // 除了上面那些以外的任何请求，都允许
                 .anyRequest().permitAll()
                 // 这里可以关闭csrf验证，默认是开启的，如果启用则需要在模板页面和模板js文件引用CSRF令牌，否则权限认证不通过。
                 .and().csrf().disable();
@@ -57,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                     // 没有登录
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
+                        //判断是不是异步请求
                         String xRequestedWith = request.getHeader("x-requested-with");
                         if ("XMLHttpRequest".equals(xRequestedWith)) {
                             response.setContentType("application/plain;charset=utf-8");

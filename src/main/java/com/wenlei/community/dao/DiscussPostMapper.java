@@ -26,12 +26,9 @@ public interface DiscussPostMapper {
 
     List<ReplyPostResult> selectReplyDiscussPosts(int userId, int offset, int limit);
 
-  /*
-
     int updateType(int id, int type);
 
     int updateStatus(int id, int status);
 
-    int updateScore(int id, double score);*/
 
 }
