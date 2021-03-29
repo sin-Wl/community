@@ -2,6 +2,7 @@ package com.wenlei.community.config;
 
 
 import com.wenlei.community.quartz.AlphaJob;
+import com.wenlei.community.quartz.PostScoreRefreshJob;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +21,8 @@ public class QuartzConfig {
     // 3.将FactoryBean注入给其他的Bean
     // 4.该Bean得到的是FactoryBean所管理的对象实例
 
-    // 配置JobDetail，任务详情
-    @Bean
+/*    // 配置JobDetail，任务详情
+    //@Bean
     public JobDetailFactoryBean alphaJobDetail() {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
         factoryBean.setJobClass(AlphaJob.class);
@@ -35,7 +36,7 @@ public class QuartzConfig {
     }
 
     // 配置Trigger(SimpleTriggerFactoryBean简单, CronTriggerFactoryBean复杂)，触发器
-    @Bean
+    //@Bean
     public SimpleTriggerFactoryBean alphaTrigger(JobDetail alphaJobDetail) {
         SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
         factoryBean.setJobDetail(alphaJobDetail);
@@ -46,7 +47,31 @@ public class QuartzConfig {
         // Trigger底层存储Job状态的数据结构
         factoryBean.setJobDataMap(new JobDataMap());
         return factoryBean;
+    }*/
+
+    // 刷新帖子分数任务
+    @Bean
+    public JobDetailFactoryBean postScoreRefreshJobDetail() {
+        JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
+        factoryBean.setJobClass(PostScoreRefreshJob.class);
+        factoryBean.setName("postScoreRefreshJob");
+        factoryBean.setGroup("communityJobGroup");
+        factoryBean.setDurability(true);
+        factoryBean.setRequestsRecovery(true);
+        return factoryBean;
     }
+
+    @Bean
+    public SimpleTriggerFactoryBean postScoreRefreshTrigger(JobDetail postScoreRefreshJobDetail) {
+        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+        factoryBean.setJobDetail(postScoreRefreshJobDetail);
+        factoryBean.setName("postScoreRefreshTrigger");
+        factoryBean.setGroup("communityTriggerGroup");
+        factoryBean.setRepeatInterval(1000 * 60 * 5);
+        factoryBean.setJobDataMap(new JobDataMap());
+        return factoryBean;
+    }
+
 
 
 }

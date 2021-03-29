@@ -16,7 +16,7 @@ public interface DiscussPostMapper {
     int selectDiscussPostRows(@Param("userId") int userId);
 
 
-    List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit);
+    List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit, int orderMode);
 
     int insertDiscussPost(DiscussPost discussPost);
 
@@ -30,5 +30,6 @@ public interface DiscussPostMapper {
 
     int updateStatus(int id, int status);
 
+    int updateScore(int id, double score);
 
 }
