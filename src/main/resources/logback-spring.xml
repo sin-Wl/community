@@ -81,7 +81,7 @@
         </filter>
     </appender>
 
-    <logger name="com.wenlei.community" level="debug"/>
+    <logger name="com.wenlei.community" level="info"/>
 
     <root level="info">
         <appender-ref ref="FILE_ERROR"/>

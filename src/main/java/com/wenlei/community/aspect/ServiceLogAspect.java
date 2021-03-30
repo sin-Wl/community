@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Component
-@Aspect
+//@Component
+//@Aspect
 public class ServiceLogAspect {
 
     public static final Logger logger = LoggerFactory.getLogger(ServiceLogAspect.class);
