@@ -11,6 +11,6 @@
 ## 7、 wkhtmltopdf(长图生成工具)
 ## 8、 mysql 5.7(建议版本>=5.7)
 # sql文件介绍
-## init_schema.sql --> 建表sql
-## init_data.sql --> 初始化数据库数据SQL
-## tables_mysql_innodb.sql --> quarter定时任务表SQL
+## 1、 init_schema.sql --> 建表sql
+## 2、 init_data.sql --> 初始化数据库数据SQL
+## 3、 tables_mysql_innodb.sql --> quarter定时任务表SQL
