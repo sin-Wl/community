@@ -21,13 +21,13 @@ function clear_error() {
 
 function upload() {
 
-    addCSRF();
+
 
     // 异步请求
     // processData:false 不把表单的内容转为字符串
     // contentType:false 不让jQuery设置上传的类型，浏览器会自动的进行设置
     $.ajax({
-        url: "http://upload-z2.qiniup.com",
+        url: "http://upload-z1.qiniup.com",
         method: "post",
         // 是否需要把表单的内容转换为字符串
         processData: false,
@@ -37,9 +37,6 @@ function upload() {
         data: new FormData($("#uploadForm")[0]),
         success: function (data) {
             if (data && data.code == 0) {
-
-                addCSRF();
-
                 // 更新头像的访问路径
                 $.post(
                     CONTEXT_PATH + "/user/header/url",
@@ -62,14 +59,4 @@ function upload() {
 
     // 事件到此为止，不再继续处理
     return false;
-}
-
-
-function addCSRF() {
-    // 发送ajax请求之前，将CSRF令牌设置到请求的消息头中
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function (e, xhr, options) {
-        xhr.setRequestHeader(header, token);
-    });
 }

@@ -1,5 +1,7 @@
 package com.wenlei.community.controller;
 
+import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import com.wenlei.community.annotation.LoginRequired;
 import com.wenlei.community.entity.DiscussPost;
 import com.wenlei.community.entity.Page;
@@ -10,7 +12,6 @@ import com.wenlei.community.util.CommunityConstant;
 import com.wenlei.community.util.CommunityUtil;
 import com.wenlei.community.util.HostHolder;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.StringMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -68,12 +70,60 @@ public class UserController implements CommunityConstant {
     @Autowired
     private CommentService commentService;
 
+    // 用户凭证
+    @Value("${qiniu.key.access}")
+    private String accessKey;
+
+    // 加密秘钥
+    @Value("${qiniu.key.secret}")
+    private String secretKey;
+
+    // header空间名字
+    @Value("${qiniu.bucket.header.name}")
+    private String headerBucketName;
+
+    // header空间url
+    @Value("${qiniu.bucket.header.url}")
+    private String headerBucketUrl;
+
     @LoginRequired
     @RequestMapping(value = "/setting", method = RequestMethod.GET)
     public String getSettingPage(Model model) {
+
+        // 生成上传文件的名称
+        String fileName = CommunityUtil.generateUUID();
+
+        // 设置响应信息
+        StringMap policy = new StringMap();
+        // 成功之后七牛云服务器返回一个json字符串，{code:0}
+        policy.put("returnBody", CommunityUtil.getJSONString(0));
+
+        // 生成上传凭证，使得七牛云服务器能够识的身份
+        Auth auth = Auth.create(accessKey, secretKey);
+        String uploadToken = auth.uploadToken(headerBucketName, fileName, 3600, policy);
+
+        model.addAttribute("uploadToken", uploadToken);
+        model.addAttribute("fileName", fileName);
+
         return "/site/setting";
     }
 
+    // 更新头像路径
+    @RequestMapping(path = "/header/url", method = RequestMethod.POST)
+    @ResponseBody
+    public String updateHeaderUrl(String fileName) {
+        if (StringUtils.isBlank(fileName)) {
+            return CommunityUtil.getJSONString(1, "文件名不能为空！");
+        }
+
+        String url = headerBucketUrl + "/" + fileName;
+        userService.updateHeader(hostHolder.getUser().getId(), url);
+
+        return CommunityUtil.getJSONString(0);
+    }
+
+    //云服务器重构，成为废弃方法
+    @Deprecated
     @LoginRequired
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model) {
@@ -113,6 +163,8 @@ public class UserController implements CommunityConstant {
         return "redirect:/index";
     }
 
+    //云服务器重构，成为废弃方法
+    @Deprecated
     @RequestMapping(value = "/header/{fileName}", method = RequestMethod.GET)
     public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response) {
 
